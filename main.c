@@ -4,6 +4,8 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include "getData.h"
+#include <stdint.h>
 	int server() {
 		struct sockaddr_in address;
 		socklen_t adlen = sizeof(address);
@@ -25,13 +27,15 @@
 		 if (ds < 0) {
 			return 4; //couldnt create datasocket
 		 }
-		 send(ds, "hello", strlen("hello"), 0);
+		 getData("/boot/config-6.12.11_1", 8192, ds); // will send num of data blocks first - then send each chunk of data 
 		 close(ds);
 		 close(cs);
 		 return 0;
 	}
 	int client() {
-			char buf[5];
+			char buf[8192];
+			buf[0] = 'a';
+			char lastmsg[8192];
 			struct sockaddr_in address;
 			int cs = socket(AF_INET, SOCK_STREAM, 0);
 			if (cs<0) {
@@ -44,7 +48,11 @@
 			if (connect(cs, (struct sockaddr *)&address, sizeof(address)) < 0) {
 				return 2;
 			}
+			while (strcmp(buf,lastmsg)!=0) {
 			read(cs, buf, sizeof(buf));
+			printf("%s\n", buf);
+			memcpy(lastmsg, buf, sizeof(buf));
+			}
 			close(cs);
 			return 0;
 	}
@@ -54,11 +62,11 @@ int main(int argc, char *argv[]) {
 	}	
 	else if (strcmp(argv[1],"host") == 0) {
 		printf("Hosting\n");
-		server();
+		return server();
 	}
 	else if (strcmp(argv[1], "client") == 0) {
 		printf("Waiting on host...\n");
-		client();
+		return client();
 	}
 	else {
 		printf("Unknown argument\n");
