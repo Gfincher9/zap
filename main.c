@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 	int server() {
 		struct sockaddr_in address;
 		socklen_t adlen = sizeof(address);
@@ -30,9 +31,8 @@
 		 return 0;
 	}
 	int client() {
-			char buf[6];
+			char buf[5];
 			struct sockaddr_in address;
-			socklen_t adlen;
 			int cs = socket(AF_INET, SOCK_STREAM, 0);
 			if (cs<0) {
 				return 1;
@@ -40,7 +40,8 @@
 			setsockopt(cs, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 0, sizeof(0));
 			address.sin_family = AF_INET;
 			address.sin_port = htons(8888); //will also be determined in config. const for now
-			if (connect(cs, (struct sockaddr *)&address, adlen) < 0) {
+			inet_pton(AF_INET, "127.0.0.1", &address.sin_addr); 
+			if (connect(cs, (struct sockaddr *)&address, sizeof(address)) < 0) {
 				return 2;
 			}
 			read(cs, buf, sizeof(buf));
