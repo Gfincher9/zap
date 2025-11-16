@@ -9,7 +9,6 @@ long fileLen;
 int filePos=0;
 int getData(char *fileLoc, int numChars, int s) {
     char data[numChars];
-    
     FILE *fp = fopen(fileLoc, "r");
     if (fp == NULL) {
         perror("Error");
