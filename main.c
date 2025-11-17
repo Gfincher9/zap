@@ -4,9 +4,9 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include "getData.h"
+#include "zapFuncs.h"
 #include <stdint.h>
-char filePath[4096] = "/home/gantt/programs/zap/README.md"; //this variable is where the data will be downloaded to.
+char filePath[4096] = "/home/gantt/programs/zap/sample_zap.conf"; //this variable is where the data will be downloaded to.
 char hostip[] = "0.0.0.0";
 
 	int server(char filePath[]) {

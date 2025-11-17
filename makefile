@@ -1,6 +1,6 @@
-FLAGS := -o3 -Werror -Wall -fomit-frame-pointer
+FLAGS :=  -Werror -Wall -O3 -fomit-frame-pointer
 CC := gcc
-main: main.c getData.h
+main: main.c zapFuncs.h
 	$(CC) $(FLAGS) main.c -o zap
 clean:
 	rm zap
